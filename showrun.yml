@@ -1,0 +1,35 @@
+---
+
+- hosts: localhost
+
+  tasks:
+   - name: Get ansible date/time facts
+     setup:
+       filter: "ansible_date_time"
+       gather_subset: "!all"
+
+   - name: Store DTG as fact
+     set_fact:
+       DTG: "{{ ansible_date_time.date }}"
+
+   - name: Create Directory {{hostvars.localhost.DTG}}
+     file:
+      path: '/home/hyellapragada/tmp/{{hostvars.localhost.DTG}}'
+      state: directory
+  run_once: true
+
+- name: Cisco Outputs
+  hosts: switches 
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+   - name: Backup
+     ios_command:
+        commands: show run
+     register: output
+
+   - name: save output to tmp
+     copy:
+       content: "{{output.stdout[0]}}" 
+       dest: "/home/hyellapragada/tmp/{{hostvars.localhost.DTG}}/{{inventory_hostname}}-{{hostvars.localhost.DTG}}-config.txt"
