@@ -1,35 +1,48 @@
 ---
-
-- hosts: localhost
+- name: VA Switch Cisco Outputs
+  hosts: va
+  gather_facts: false
+  connection: network_cli
 
   tasks:
-   - name: Get ansible date/time facts
-     setup:
-       filter: "ansible_date_time"
-       gather_subset: "!all"
+   - name: VA Switch Cisco Outputs
+     cisco.ios.ios_command:
+        commands: show run | exclude !Time
+     register: output
 
-   - name: Store DTG as fact
-     set_fact:
-       DTG: "{{ ansible_date_time.date }}"
+   - name: Saving VA output to tmp
+     copy:
+       content: "{{output.stdout[0]}}"
+       dest: "/home/hyellapragada/tmp/va-dc/{{inventory_hostname}}-config.txt"
 
-   - name: Create Directory {{hostvars.localhost.DTG}}
-     file:
-      path: '/home/hyellapragada/tmp/{{hostvars.localhost.DTG}}'
-      state: directory
-  run_once: true
-
-- name: Cisco Outputs
-  hosts: switches 
+- name: LA Switch Cisco Outputs
+  hosts: la
   gather_facts: false
   connection: network_cli
 
   tasks:
    - name: Backup
-     ios_command:
-        commands: show run
+     cisco.ios.ios_command:
+        commands: show run | exclude !Time
      register: output
 
-   - name: save output to tmp
+   - name: Saving LA output to tmp
      copy:
-       content: "{{output.stdout[0]}}" 
-       dest: "/home/hyellapragada/tmp/{{hostvars.localhost.DTG}}/{{inventory_hostname}}-{{hostvars.localhost.DTG}}-config.txt"
+       content: "{{output.stdout[0]}}"
+       dest: "/home/hyellapragada/tmp/la-dc/{{inventory_hostname}}-config.txt"
+
+- name: EU Switch Cisco Outputs
+  hosts: eu
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+   - name: Backup
+     cisco.ios.ios_command:
+        commands: show run | exclude !Time
+     register: output
+
+   - name: Saving EU output to tmp
+     copy:
+       content: "{{output.stdout[0]}}"
+       dest: "/home/hyellapragada/tmp/eu-dc/{{inventory_hostname}}-config.txt"
