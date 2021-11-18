@@ -1,21 +1,21 @@
 ---
-- name: VA Switch Cisco Outputs
+- name: Location1 Switch Cisco Outputs
   hosts: va
   gather_facts: false
   connection: network_cli
 
   tasks:
-   - name: VA Switch Cisco Outputs
+   - name: Location1 Switch Cisco Outputs
      cisco.ios.ios_command:
         commands: show run | exclude !Time
      register: output
 
-   - name: Saving VA output to tmp
+   - name: Saving output to tmp
      copy:
        content: "{{output.stdout[0]}}"
-       dest: "/home/hyellapragada/tmp/va-dc/{{inventory_hostname}}-config.txt"
+       dest: "/home/<user>/tmp/Location1-dc/{{inventory_hostname}}-config.txt"
 
-- name: LA Switch Cisco Outputs
+- name: Location2 Switch Cisco Outputs
   hosts: la
   gather_facts: false
   connection: network_cli
@@ -26,12 +26,12 @@
         commands: show run | exclude !Time
      register: output
 
-   - name: Saving LA output to tmp
+   - name: Saving output to tmp
      copy:
        content: "{{output.stdout[0]}}"
-       dest: "/home/hyellapragada/tmp/la-dc/{{inventory_hostname}}-config.txt"
+       dest: "/home/<user>/tmp/Location2-dc/{{inventory_hostname}}-config.txt"
 
-- name: EU Switch Cisco Outputs
+- name: Location3 Switch Cisco Outputs
   hosts: eu
   gather_facts: false
   connection: network_cli
@@ -42,7 +42,7 @@
         commands: show run | exclude !Time
      register: output
 
-   - name: Saving EU output to tmp
+   - name: Saving Location3 output to tmp
      copy:
        content: "{{output.stdout[0]}}"
-       dest: "/home/hyellapragada/tmp/eu-dc/{{inventory_hostname}}-config.txt"
+       dest: "/home/<user>/tmp/Location3-dc/{{inventory_hostname}}-config.txt"
