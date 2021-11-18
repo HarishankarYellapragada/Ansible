@@ -1,6 +1,6 @@
 ---
 - name: Location1 Switch Cisco Outputs
-  hosts: va
+  hosts: Location1
   gather_facts: false
   connection: network_cli
 
@@ -16,7 +16,7 @@
        dest: "/home/<user>/tmp/Location1-dc/{{inventory_hostname}}-config.txt"
 
 - name: Location2 Switch Cisco Outputs
-  hosts: la
+  hosts: Location2
   gather_facts: false
   connection: network_cli
 
@@ -32,7 +32,7 @@
        dest: "/home/<user>/tmp/Location2-dc/{{inventory_hostname}}-config.txt"
 
 - name: Location3 Switch Cisco Outputs
-  hosts: eu
+  hosts: Location3
   gather_facts: false
   connection: network_cli
 
